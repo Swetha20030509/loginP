@@ -1,9 +1,20 @@
 package loginPage;
 import DataLayer.DataBase;
+import model.User;
+
 import com.opensymphony.xwork2.ActionSupport;
 public class LoginAction extends ActionSupport {
+	
 	String Email;
 	String password;
+	User user;
+	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public String getEmail() {
 		return Email;
 	}
@@ -16,14 +27,20 @@ public class LoginAction extends ActionSupport {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String execute() 
+	public String execute() throws ClassNotFoundException 
 	    {
-		System.out.println("Heroine");
-				Boolean success=DataBase.userExists(getEmail(),getPassword());
-				System.out.println("hi");
-				if(success)
+			if(DataBase.isAdmin(getEmail(),getPassword()))
+			{
+				return "ADMIN";
+			}
+			else
+			{
+			 user=DataBase.validateUser(getEmail(),getPassword());
+			 setUser(user);
+				if(user!=null)
 	            return SUCCESS;
 				else
 					return ERROR;
+			}
 	    }
 }

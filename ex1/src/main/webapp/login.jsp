@@ -53,7 +53,7 @@
   <div class="login-container">
     <h2>Login</h2>
     <form class="login-form" action="Login" method="post">
-    <input name="username" placeholder="Username" theme="simple">
+    <input name="email" placeholder="Email" theme="simple">
     <input name="password" placeholder="Password" theme="simple">
    <button>submit</button>
    </form> 
