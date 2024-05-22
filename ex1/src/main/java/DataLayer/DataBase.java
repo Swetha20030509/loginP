@@ -5,12 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 
 import loginPage.LoginAction;
+import model.Product;
 import model.User;
 
 public class DataBase {
@@ -18,6 +20,7 @@ public class DataBase {
 	    private static final String USERNAME = "root";
 	    private static final String PASSWORD = "Admin";
 	    static User user;
+	   
 	    static
 	    {
 	    	try {
@@ -25,6 +28,20 @@ public class DataBase {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+	    }
+	    public static boolean  addProduct(String name,String amount)
+	    {
+	    	String sql="INSERT INTO product (name,amount) VALUES(?,?)";
+	    	 try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		             PreparedStatement stmt = conn.prepareStatement(sql)) {
+		            stmt.setString(1, name);
+		            stmt.setString(2, amount);
+		            int rowsAffected = stmt.executeUpdate();
+		            return rowsAffected > 0; 
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		            return false;
+		        }
 	    }
 	    public static User validateUser(String email, String password) {
 	        String sql = "SELECT * FROM UserDetails WHERE email = ? AND password = ?";
@@ -35,7 +52,7 @@ public class DataBase {
 	            stmt.setString(2, password);
 	            try (ResultSet rs = stmt.executeQuery()) {
 	            	boolean a= rs.next();
-	            	System.out.println("........."+a+"*******");
+	            	
 	            	if(a)
 	            	{
 	            		user =new User();
@@ -78,7 +95,6 @@ public class DataBase {
 	    }
 	    public static User getUser()
 	    {
-	    	System.out.println(user.getEmail());
 	    	return user;
 	    }
 		public static boolean userExists(String email, String password) {
@@ -106,5 +122,19 @@ public class DataBase {
 				return true;
 			return false;
 		}
-
+		public ArrayList<Product> getProductList() throws SQLException {
+			 ArrayList<Product> productList=new ArrayList<>();
+			String query="SELECT * FROM  PRODUCT";
+			try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+					PreparedStatement statement = conn.prepareStatement(query);
+		             ResultSet resultSet = statement.executeQuery()) {
+		            while (resultSet.next()) {
+		            	Product product = new Product();
+		                product.setName(resultSet.getString("name"));
+		                product.setAmount(resultSet.getString("amount"));
+		                productList.add(product);
+		            }
+		        }
+			return productList;
+		}
 }

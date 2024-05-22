@@ -4,13 +4,16 @@
 <struts>
     <package name="default" extends="struts-default">
         <action name="Login" class="loginPage.LoginAction">
-            <result name="success">display.jsp</result>  
+            <result name="success">index.jsp</result>  
             <result name="ADMIN">Dash.jsp</result> 
              <result name="error">login.jsp</result> 
         </action>
         <action name="SignUp" class="signupPage.SignUpAction">
         <result name="success">index.jsp</result>
         </action>
-       
+       <action name="Product" class="Action.ProductAction">
+       <result name="success">Dash.jsp</result>
+       <result name="error">login.jsp</result>
+       </action>
     </package>
 </struts>

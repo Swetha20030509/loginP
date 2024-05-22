@@ -53,8 +53,8 @@
   <div class="login-container">
     <h2>Login</h2>
     <form class="login-form" action="Login" method="post">
-    <input name="email" placeholder="Email" theme="simple">
-    <input name="password" placeholder="Password" theme="simple">
+    <input name="email" placeholder="Email">
+    <input name="password" placeholder="Password">
    <button>submit</button>
    </form> 
   </div>

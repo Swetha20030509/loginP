@@ -38,9 +38,15 @@ public class LoginAction extends ActionSupport {
 			 user=DataBase.validateUser(getEmail(),getPassword());
 			 setUser(user);
 				if(user!=null)
+				{
+	            
+	  
 	            return SUCCESS;
+				}
 				else
+				{
 					return ERROR;
+				}
 			}
 	    }
 }
