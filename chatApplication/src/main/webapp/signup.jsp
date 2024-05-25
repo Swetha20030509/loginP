@@ -63,7 +63,7 @@
       <input type="text" id="username" name="username" required>
     </div>
     <div class="form-group">
-      <label for="email">Email:</label>
+      <label for="email">PhoneNumber:</label>
       <input type="text" id="phonenumber" name="mobileNo" required>
     </div>
     <div class="form-group">

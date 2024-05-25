@@ -9,6 +9,25 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script type="text/javascript">
+function sendFriendRequest(receiverId) {
+    $.ajax({
+        url: 'sendFriendRequest',
+        type: 'POST',
+        data: {
+            senderId: /* your logged-in user ID */,
+            receiverId: receiverId
+        },
+        success: function(response) {
+            alert('Friend request sent!');
+        },
+        error: function() {
+            alert('Error sending friend request.');
+        }
+    });
+}
+</script>
 <style>
 #nav
 {
@@ -26,12 +45,12 @@ box-shadow: 10px 10px 20px 5px rgba(0, 0, 0, 0.5);
 #search
 {
 	height:30px;
-	width:30%;
+	width:60%;
 	border-radius:10px;
 	margin-left:150px;
 	margin-top:5px;
-	float:left;
-	display: inline;
+	
+	
 }
 #login1
 {
@@ -52,19 +71,64 @@ box-shadow: 10px 10px 20px 5px rgba(0, 0, 0, 0.5);
 {
 	height:40px;
 	width:50px;
-	margin-left:95%;
-	display: inline;
+	
 }
-#w1
-{
-display: inline;
-}
+
 #container
 {
-height:5yh0px;
+height:30px;
 width:30%;
-margin-top:10px;
-border:1px solid black;
+margin-top:40px;
+ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+padding:20px;
+}
+#req
+{
+	height:30px;
+	width:35%;
+	float:right;
+	background-color:rgb(133, 51, 255);
+	border:1px solid #8533ff;
+	color:white;
+	border-radius:10px;
+	  box-shadow: 1px 1px 5px rgb(133, 51, 255); 
+	
+}
+#searchUser
+{
+	display:inline;
+	color: rgb(133, 51, 255);
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	}
+#searchDiv
+{
+width:60%;
+height:10px;
+float:left;
+}
+#message
+{
+	height:30px;
+	width:30px;
+}
+#connect
+{
+	height:30px;
+	width:30px;
+	margin-left:20px;
+}
+#submit
+{
+	height:40px;
+	width:100px;
+	margin-left:10px;
+	background-color:rgb(133, 51, 255);
+	border:1px solid #8533ff;
+	color:white;
+	border-radius:10px;
+	  box-shadow: 1px 1px 5px rgb(133, 51, 255); 
+	
 }
 </style>
 </head>
@@ -97,14 +161,25 @@ border:1px solid black;
 			if(user!=null)
 			{
 		%>
-		<form action="search">
-		<input type="text" id="search" placeholder="search">
-		<button>Submit</button>
+		<div style="width:70%;height:10px;float:left">
+		<form action="Search" method="post">
+		<input type="text"  id="search" name="Search" placeholder="search">
+		 <input type="submit" id="submit">
+		 </div>
 		</form>
-		<div id="w1">
-        <p class="welcome">Welcome, <%=user.getName() %></p>
-        <img alt="" src="icon.jpg" id="icon">
-       </div>
+		<div style="float:left;width:10%;height:10px;padding:10px;">
+		<img alt="" src="message.png" id="message" style="float:left">
+		<img alt="" src="connect.png" id="connect" style="float:left">
+		
+		</div>
+		
+		<div style="float:left">
+		
+			<span style="color: rgb(133, 51, 255);font-family: Arial, Helvetica, sans-serif;font-weight:bold;
+}"><%= user.getName()%></span>
+			<img alt="" src="icon.jpg" id="icon">
+			
+		</div>
         <%
 			}
         %>
@@ -114,7 +189,11 @@ border:1px solid black;
     	{
     %>
     <div id="container">
-    	<%= user1.getName()%>
+    	<div id="searchDiv"><p id="searchUser"><%= user1.getName()%></p></div>
+    	<form action="request">
+    	<button onclick="friendRequest()"id="req">Send Request</button>
+    	</form>
+    	
     </div>
     <%
     	}

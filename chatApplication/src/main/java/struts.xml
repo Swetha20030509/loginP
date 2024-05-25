@@ -9,7 +9,7 @@
         <action name="SignUp" class="signupPage.SignUpAction">
         <result name="success">index.jsp</result>
         </action>
-         <action name="search" class="DAO.UserDAO">
+         <action name="Search" class="DAO.UserDAO">
          <result name="success">index.jsp</result>
          </action>
     </package>

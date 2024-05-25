@@ -14,49 +14,52 @@ public class UserDAO extends ActionSupport{
 	private static final String URL = "jdbc:mysql://localhost:3306/ chatApplication";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Admin";
-	 List<User> user=new ArrayList<>();
+	 static List<User> userList=new ArrayList<>();
+	 String Search;
 	public  List<User> getUser() {
-		return user;
+		return userList;
 	}
 
-	public  void setUser(List<User> user) {
-		this.user = user;
-	}
-	String username;
+	
+	
 	public String execute() throws SQLException
 	{
-		user=searchUser(username);
+		userList=new ArrayList<>();
+		String query="SELECT * FROM  USER";
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = conn.prepareStatement(query);
+	             ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	            	if(resultSet.getString("username").startsWith(getSearch()))
+	            	{
+	            		//System.out.println(resultSet.getString("Search"));
+	            	User user = new User();
+	            	user.setName(resultSet.getString("name"));
+	            	user.setMobileNo(resultSet.getString("mobileNo"));
+	            	userList.add(user);
+	            	}
+	            }
+	        }
 		return SUCCESS;
 	}
 	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	
+	public String getSearch() {
+		return Search;
+	}
+
+
+
+	public void setSearch(String search) {
+		Search = search;
+	}
+
+
+
 	public Connection connection() throws SQLException
 	{
 		return DriverManager.getConnection(URL, USERNAME, PASSWORD);
 	}
-	public List<User> searchUser(String username) throws SQLException
-	{
-		List<User> users=new ArrayList<>();
-		 
-			String query="SELECT * FROM  USER";
-			try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-					PreparedStatement statement = conn.prepareStatement(query);
-		             ResultSet resultSet = statement.executeQuery()) {
-		            while (resultSet.next()) {
-		            	User user = new User();
-		            	user.setName(resultSet.getString("name"));
-		            	user.setMobileNo(resultSet.getString("mobileNo"));
-		            	//user.setMobileNo(resultSet.getString("mobileNo");
-		            	users.add(user);
-		            }
-		        }
-			return users;
-	}
+	
 }
 
