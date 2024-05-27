@@ -1,5 +1,5 @@
 package loginPage;
-import DataLayer.DataBase;
+import datalayer.DataBase;
 import model.User;
 
 import com.opensymphony.xwork2.ActionSupport;

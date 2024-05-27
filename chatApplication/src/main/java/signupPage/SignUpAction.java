@@ -1,5 +1,5 @@
 package signupPage;
-import DataLayer.DataBase;
+import datalayer.DataBase;
 import com.opensymphony.xwork2.ActionSupport;
 public class SignUpAction extends ActionSupport {
 	 private String name;
