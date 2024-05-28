@@ -16,7 +16,6 @@
          <result name="success">index.jsp</result>
          </action>
           <action name="viewrequest" class="action.Friendrequest" method="displayFriendRequests">
-          <result name="success">popup.jsp</result>
           </action>
     </package>
 </struts>

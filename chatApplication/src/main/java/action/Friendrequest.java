@@ -49,9 +49,8 @@ public class Friendrequest extends ActionSupport {
 	            }
 		return SUCCESS;
 	}
-	public String displayFriendRequests()
+	public void displayFriendRequests()
 	{
-		System.out.println("---------------");
 		userList=new ArrayList<>();
 		String query = "SELECT fr.id AS friend_request_id, u1.name AS sender_name, " +
 		               "u1.mobileNo AS sender_mobile, u1.username AS sender_username, " +
@@ -64,16 +63,14 @@ public class Friendrequest extends ActionSupport {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		     PreparedStatement statement = conn.prepareStatement(query);
 		     ResultSet resultSet = statement.executeQuery()) {
-		    
 		    while (resultSet.next()) {
-		        System.out.println("*************");
 		        User user = new User();
 		        user.setName(resultSet.getString("receiver_name"));
 		        userList.add(user);
 		    }
 		} catch (SQLException e) {
+			
 		    e.printStackTrace();}
-		return SUCCESS;
 	}
 	public Connection connection() throws SQLException
 	{

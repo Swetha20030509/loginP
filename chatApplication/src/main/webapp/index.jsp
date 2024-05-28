@@ -54,7 +54,7 @@
 
 #container {
 	height: 30px;
-	width: 30%;
+	width: 50%;
 	margin-top: 40px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
 		rgba(0, 0, 0, 0.19);
@@ -80,7 +80,7 @@
 }
 
 #searchDiv {
-	width: 60%;
+	width: 100%;
 	height: 10px;
 	float: left;
 }
@@ -121,20 +121,34 @@
 	font-size: 40px;
 }
 #displayFriendReq {
-	display:none;
-	height: 500px;
+	height: 450px;
 	width: 500px;
 	margin: auto;
 	margin-top: 50px;
 	overflow-y: scroll;
 	background-color: white;
 	box-shadow: 5px 10px 18px #888888;
-	 position: absolute;
+	position: absolute;
+	margin-left:350px;
+	display:none;
 }
 
 </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	function request() {
+		$.ajax({
+            type: "GET",
+            url: "viewrequest", 
+            success: function(response) {
+               
+                console.log("AJAX request successful!");
+            },
+            error: function(xhr, status, error) {
+                
+                console.error("Error:", error);
+            }
+        });
 		document.getElementById("displayFriendReq").style.display = "block";
 	}
 	function closepopup()
@@ -183,6 +197,7 @@
 				<input type="hidden" name="senderId" value="<%=user.getId()%>">
 				<img alt="" src="connect.png" id="connect" style="float: left"
 					onclick="request()">
+				
 			</form>
 		</div>
 		<div style="float: left">
@@ -194,7 +209,7 @@
 		}
 		%>
 	</div>
-	<div style="position: relative;height:600px;width:50%;border:1px solid black">
+	<div style="position: relative;height:600px;width:50%;float:left">
 	<%
 	for (User user1 : userList) {
 	%>
@@ -214,9 +229,7 @@
 	%>
 	</div>
 	<div id="displayFriendReq">
-		
 		<span class="close-btn" id="close" onclick="closepopup()">&times;</span>
-		
 		<%
 		for (User req : Request) {
 		%>
@@ -228,7 +241,7 @@
 				<button>Accept</button>
 				<button>Ignore</button>
 			</div>
-		</div>
+			</div>
 		<%
 		}
 		%>
