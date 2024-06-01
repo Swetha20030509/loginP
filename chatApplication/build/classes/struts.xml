@@ -16,6 +16,9 @@
          <result name="success">index.jsp</result>
          </action>
           <action name="viewrequest" class="action.Friendrequest" method="displayFriendRequests">
+           
+          </action>
+           <action name="acceptrequest" class="action.Friendrequest" method="acceptRequests">
           </action>
     </package>
 </struts>

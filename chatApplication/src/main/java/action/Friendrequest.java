@@ -17,7 +17,14 @@ public class Friendrequest extends ActionSupport {
     private static final String PASSWORD = "Admin";
 	int senderId;
 	int receiverId;
-	static ArrayList<User> userList=new ArrayList<>();
+	int friendId;
+	public int getFriendId() {
+		return friendId;
+	}
+	public void setFriendId(int friendId) {
+		this.friendId = friendId;
+	}
+	 ArrayList<User> userList=new ArrayList<>();
 	public ArrayList<User> getUserList() {
 		return userList;
 	}
@@ -49,12 +56,28 @@ public class Friendrequest extends ActionSupport {
 	            }
 		return SUCCESS;
 	}
+	public void acceptRequests()
+	{
+		System.out.println("==================");
+		//System.out.println(senderId+"********");
+		//System.out.println(receiverId+".......");
+		String query="Update friend_requests set status='accepted' where senderId=? && receiverId=?";
+		try {
+			Connection con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			PreparedStatement statement = con.prepareStatement(query);
+			statement.setInt(1,  senderId);
+			statement.setInt(2,  receiverId);
+			int rowsAffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	public void displayFriendRequests()
 	{
-		userList=new ArrayList<>();
+		
 		String query = "SELECT fr.id AS friend_request_id, u1.name AS sender_name, " +
 		               "u1.mobileNo AS sender_mobile, u1.username AS sender_username, " +
-		               "u2.name AS receiver_name, u2.mobileNo AS receiver_mobile, " +
+		               "u2.name AS receiver_name,u2.id AS id, u2.mobileNo AS receiver_mobile, " +
 		               "u2.username AS receiver_username, fr.status " +
 		               "FROM friend_requests fr " +
 		               "JOIN user u1 ON fr.senderId = u1.id " +
@@ -65,12 +88,14 @@ public class Friendrequest extends ActionSupport {
 		     ResultSet resultSet = statement.executeQuery()) {
 		    while (resultSet.next()) {
 		        User user = new User();
+		        user.setId(resultSet.getInt("id"));
 		        user.setName(resultSet.getString("receiver_name"));
 		        userList.add(user);
 		    }
 		} catch (SQLException e) {
 			
 		    e.printStackTrace();}
+		System.out.println("--------------");
 	}
 	public Connection connection() throws SQLException
 	{
