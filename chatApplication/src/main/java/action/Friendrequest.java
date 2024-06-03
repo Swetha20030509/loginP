@@ -9,22 +9,19 @@ import java.util.ArrayList;
 
 import com.opensymphony.xwork2.ActionSupport;
 
+import datalayer.DataBase;
 import model.User;
 
 public class Friendrequest extends ActionSupport {
 	private static final String URL = "jdbc:mysql://localhost:3306/ chatApplication";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Admin";
-	int senderId;
-	int receiverId;
-	int friendId;
-	public int getFriendId() {
-		return friendId;
-	}
-	public void setFriendId(int friendId) {
-		this.friendId = friendId;
-	}
-	 ArrayList<User> userList=new ArrayList<>();
+	private int senderId;
+	private int receiverId;
+	
+  private static ArrayList<User> userList=new ArrayList<User>();
+	
+	 
 	public ArrayList<User> getUserList() {
 		return userList;
 	}
@@ -58,15 +55,15 @@ public class Friendrequest extends ActionSupport {
 	}
 	public void acceptRequests()
 	{
-		System.out.println("==================");
-		//System.out.println(senderId+"********");
-		//System.out.println(receiverId+".......");
+		//System.out.println("==================");
+		//System.out.println(getSenderId()+"********");
+		//System.out.println(getReceiverId()+"...//....");
 		String query="Update friend_requests set status='accepted' where senderId=? && receiverId=?";
 		try {
 			Connection con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			PreparedStatement statement = con.prepareStatement(query);
-			statement.setInt(1,  senderId);
-			statement.setInt(2,  receiverId);
+			statement.setInt(1,  getReceiverId());
+			statement.setInt(2,  getSenderId());
 			int rowsAffected = statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -74,28 +71,36 @@ public class Friendrequest extends ActionSupport {
 	}
 	public void displayFriendRequests()
 	{
-		
-		String query = "SELECT fr.id AS friend_request_id, u1.name AS sender_name, " +
-		               "u1.mobileNo AS sender_mobile, u1.username AS sender_username, " +
-		               "u2.name AS receiver_name,u2.id AS id, u2.mobileNo AS receiver_mobile, " +
-		               "u2.username AS receiver_username, fr.status " +
-		               "FROM friend_requests fr " +
-		               "JOIN user u1 ON fr.senderId = u1.id " +
-		               "JOIN user u2 ON fr.receiverId = u2.id";
+		int currentUserId=DataBase.getUser().getId();
+		System.out.println(currentUserId+".....***....");
+		 userList=new ArrayList<User>();
+		 String query = "SELECT fr.id AS friend_request_id, " +
+	               "u1.id AS id, " +
+	               "u1.name AS sender_name, " +
+	               "u2.name AS receiver_name " +
+	               "FROM friend_requests fr " +
+	               "JOIN user u1 ON fr.senderId = u1.id " +
+	               "JOIN user u2 ON fr.receiverId = u2.id " +
+	               "WHERE fr.receiverId = ? AND fr.status = 'pending'";
 
-		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-		     PreparedStatement statement = conn.prepareStatement(query);
-		     ResultSet resultSet = statement.executeQuery()) {
-		    while (resultSet.next()) {
-		        User user = new User();
-		        user.setId(resultSet.getInt("id"));
-		        user.setName(resultSet.getString("receiver_name"));
-		        userList.add(user);
-		    }
-		} catch (SQLException e) {
-			
-		    e.printStackTrace();}
+  try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+       PreparedStatement statement = conn.prepareStatement(query)) {
+      statement.setInt(1, currentUserId);
+      try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+              User user = new User();
+              user.setId(resultSet.getInt("id"));
+              user.setName(resultSet.getString("sender_name"));
+              userList.add(user);
+          }
+      }
+  } catch (SQLException e) {
+      e.printStackTrace();
+     
+  }
+
 		System.out.println("--------------");
+		System.out.println(userList.size()+"***********");
 	}
 	public Connection connection() throws SQLException
 	{

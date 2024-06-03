@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.opensymphony.xwork2.ActionSupport;
+
+import datalayer.DataBase;
 import model.User;
 
 public class UserDAO extends ActionSupport {
@@ -28,8 +30,7 @@ public class UserDAO extends ActionSupport {
 				PreparedStatement statement = conn.prepareStatement(query);
 				ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
-				if (resultSet.getString("username").startsWith(getSearch())) {
-					// System.out.println(resultSet.getString("Search"));
+				if (!(DataBase.getUser().getUsername().equals(resultSet.getString("username")))&&(resultSet.getString("username").startsWith(getSearch()))) {
 					User user = new User();
 					user.setName(resultSet.getString("name"));
 					user.setMobileNo(resultSet.getString("mobileNo"));

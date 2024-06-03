@@ -7,7 +7,7 @@
 <%@ page import="action.Friendrequest"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="model.User"%>
-<%@ taglib uri="/struts-tags" prefix="s" %>  
+<%@ taglib uri="/struts-tags" prefix="s" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -190,6 +190,15 @@
 	width:40px;
 	border-radius:20px;
 	bakground-color:green;
+	
+}
+#accept
+{
+height:30px;
+width:60px;
+cursor:pointer;
+border:1px solid black;
+justify-content: center;
 }
 </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -214,11 +223,15 @@
 	{
 		document.getElementById("displayFriendReq").style.display = "none";
 	}
-	function acceptRequest(count)
+	function acceptRequest(count,receiver,sender)
 	{
 		$.ajax({
             type: "GET",
             url: "acceptrequest", 
+            data: {
+                receiverId: receiver,
+                senderId: sender
+            },
             success: function(response) {
                 console.log("AJAX request successful!");
             },
@@ -233,19 +246,19 @@
 	{
 		doucument.getElementById("container").style.display="block";
 	}
+	if (user != null)
+		request(user.getId());
 </script>
 </head>
 <body>
 	<%
+	Friendrequest fq = new Friendrequest();
+	ArrayList<User> Request = fq.getUserList();
 	int count = 0;
 	DataBase dao = new DataBase();
 	UserDAO userdao = new UserDAO();
 	List<User> userLists = userdao.getUser();
 	User user = dao.getUser();
-	if (user != null)
-		System.out.println(user.getId() + "....");
-	Friendrequest fq = new Friendrequest();
-	ArrayList<User> Request = fq.getUserList();
 	%>
 	<div id="nav">
 		<%
@@ -263,6 +276,7 @@
 		%>
 		<%
 		if (user != null) {
+		
 		%>
 		<div id="searchCon" style="width: 70%; height: 10px; float: left">
 			<form action="Search" method="post">
@@ -297,7 +311,7 @@
 		</div>
 		<form action="request">
 			<input type="hidden" name="senderId" value="<%=user.getId()%>">
-			<input type="hidden" name="receiverId" value="<%=user.getId()%>">
+			<input type="hidden" name="receiverId" value="<%=user1.getId()%>">
 			<button id="req">Send Request</button>
 		</form>
 	</div>
@@ -314,8 +328,12 @@
 	</div>
 	<div id="displayFriendReq">
 		<span class="close-btn" id="close" onclick="closepopup()">&times;</span>
-		 /*<% if (Request != null) { %>
-    <% for (User req : Request) { %>
+		
+		<% if (Request != null) { %>
+		
+    <% for (User req : Request) {
+    	System.out.println(".....AAAAAAAAAAA.....");
+    	%>
         <% count++; %>
         <div class="userDetail" id="div<%= count %>">
             <div style="height: 20px; width: 160px; font-size: 20px; color: blue; background-color: white; float: left; padding: 20px">
@@ -323,17 +341,20 @@
             </div>
             <div  style="height: 20px; width: 150px; float: right; background-color: white; padding: 20px">
                 <form id="form<%= count %>" action="acceptrequest" method="post">
+     
                     <input type="hidden" name="receiverId" value="<%= req.getId() %>">
                     <input type="hidden" name="senderId" value="<%= user.getId() %>">
-                    <div style="height:30px;width:100px;cursor:pointer;border:1px solid black" onclick="acceptRequest('<%= count %>')">Accept</div>
+                    <div id="accept" onclick="acceptRequest('<%= count %>',<%= req.getId() %>,<%= user.getId() %>)">Accept</div>
                 </form>
                 <button>Ignore</button>
             </div>
         </div>
     <% } %>
-<% } %>*/
-		
+<% } else {%>
+ <p>No friend requests found.</p>
+<% } %>
 
 	</div>
+	
 </body>
 </html>
