@@ -3,6 +3,8 @@ import datalayer.DataBase;
 import model.User;
 
 import com.opensymphony.xwork2.ActionSupport;
+
+import action.Friendrequest;
 public class LoginAction extends ActionSupport {
 	
 	String mobileNo;
@@ -48,7 +50,7 @@ public class LoginAction extends ActionSupport {
 				if(user!=null)
 				{
 	            
-	  
+					
 	            return SUCCESS;
 				}
 				else

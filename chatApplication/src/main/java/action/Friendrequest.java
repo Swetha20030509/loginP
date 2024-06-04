@@ -20,8 +20,9 @@ public class Friendrequest extends ActionSupport {
 	private int receiverId;
 	
   private static ArrayList<User> userList=new ArrayList<User>();
+  private static ArrayList<User> acceptFriends=new ArrayList<>();
 	
-	 
+  
 	public ArrayList<User> getUserList() {
 		return userList;
 	}
@@ -53,6 +54,8 @@ public class Friendrequest extends ActionSupport {
 	            }
 		return SUCCESS;
 	}
+	
+	
 	public void acceptRequests()
 	{
 		//System.out.println("==================");
@@ -71,8 +74,8 @@ public class Friendrequest extends ActionSupport {
 	}
 	public void displayFriendRequests()
 	{
+		
 		int currentUserId=DataBase.getUser().getId();
-		System.out.println(currentUserId+".....***....");
 		 userList=new ArrayList<User>();
 		 String query = "SELECT fr.id AS friend_request_id, " +
 	               "u1.id AS id, " +

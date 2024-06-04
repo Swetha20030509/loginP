@@ -254,11 +254,13 @@ justify-content: center;
 	<%
 	Friendrequest fq = new Friendrequest();
 	ArrayList<User> Request = fq.getUserList();
+	
 	int count = 0;
 	DataBase dao = new DataBase();
 	UserDAO userdao = new UserDAO();
 	List<User> userLists = userdao.getUser();
 	User user = dao.getUser();
+	
 	%>
 	<div id="nav">
 		<%
