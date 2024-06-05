@@ -9,8 +9,8 @@
         <action name="SignUp" class="signupPage.SignUpAction">
         <result name="success">index.jsp</result>
         </action>
-         <action name="Search" class="DAO.UserDAO">
-         <result name="success">index.jsp</result>
+         <action name="Search" class="DAO.UserDAO" method="searchUser">
+         
          </action>
           <action name="request" class="action.Friendrequest">
          <result name="success">index.jsp</result>

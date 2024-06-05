@@ -2,6 +2,8 @@ package loginPage;
 import datalayer.DataBase;
 import model.User;
 
+import java.util.ArrayList;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 import action.Friendrequest;
@@ -10,8 +12,19 @@ public class LoginAction extends ActionSupport {
 	String mobileNo;
 	String password;
 	User user;
+	ArrayList<User> friends;
 	
 	
+	public ArrayList<User> getFriends() {
+		return friends;
+	}
+
+
+	public void setFriends(ArrayList<User> friends) {
+		this.friends = friends;
+	}
+
+
 	public String getMobileNo() {
 		return mobileNo;
 	}
@@ -49,8 +62,7 @@ public class LoginAction extends ActionSupport {
 			 setUser(user);
 				if(user!=null)
 				{
-	            
-					
+					setFriends(Friendrequest.getFriends(user.getId()));
 	            return SUCCESS;
 				}
 				else

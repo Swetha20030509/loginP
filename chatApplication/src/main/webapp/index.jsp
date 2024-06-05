@@ -56,7 +56,7 @@
 
 #container {
 	height: 30px;
-	width: 50%;
+	width: 80%;
 	margin-top: 40px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
 		rgba(0, 0, 0, 0.19);
@@ -91,6 +91,7 @@
 #message {
 	height: 30px;
 	width: 30px;
+	cursor: pointer;
 }
 
 #connect {
@@ -108,6 +109,8 @@
 	color: white;
 	border-radius: 10px;
 	box-shadow: 1px 1px 5px rgb(133, 51, 255);
+	float:right;
+	cursor:pointer;
 }
 .userDetail {
 	height: 60px;
@@ -135,61 +138,7 @@
 	margin-left:350px;
 	display:none;
 }
-#contact
-{
-	height:500px;
-	width:100%;
-	border:3px solid black;
-	 position: absolute;
-	 display:none;
-}
-#contactDetail
-{
-	height:500px;
-	width:35%;
-	border:1px solid black;
-	float:left;
-	overflow-y: scroll;
-}
-#messages
-{
-	height:400px;
-	width:63%;
-	border:1px solid blue;
-	float:left;
-	overflow-y: scroll;
-}
-#sendMessage
-{
-	height:100px;
-	width:63%;
-	border:1px solid pink;
-	float:left;
-	postion: absolute;
-}
-#contactBox
-{
-	height:80px;
-	width:350px;
-	border:1px solid black;
-	margin:auto;
-	margin-top:20px;
-}
-#msg
-{
-		height:40px;
-		width:300px;
-		border-radius:15px;
-		margin-top:40px;
-		margin-left:350px;
-}
-#send
-{
-	margin-left:10px;
-	height:40px;
-	width:40px;
-	border-radius:20px;
-	bakground-color:green;
+
 	
 }
 #accept
@@ -200,9 +149,33 @@ cursor:pointer;
 border:1px solid black;
 justify-content: center;
 }
+#search1
+{
+position: relative;
+height:400px;
+width:30%;
+float:left;
+margin-left:500px;
+box-shadow: 5px 10px 18px #888888;
+overflow-y: scroll;
+display:none;
+
+}
+.close-btn1
+{
+cursor:pointer;
+position: absolute;
+	margin-left:320px;
+	cursor: pointer;
+	font-size: 40px;
+}
 </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+	function openContact()
+	{
+		document.getElementById("contact").style.display="block";
+	}
 	function request() {
 		
 		
@@ -210,6 +183,7 @@ justify-content: center;
             type: "GET",
             url: "viewrequest", 
             success: function(response) {
+            	document.getElementById("contact").style.display="none";
             	document.getElementById("displayFriendReq").style.display = "block";
             },
             error: function(xhr, status, error) {
@@ -223,6 +197,7 @@ justify-content: center;
 	{
 		document.getElementById("displayFriendReq").style.display = "none";
 	}
+	
 	function acceptRequest(count,receiver,sender)
 	{
 		$.ajax({
@@ -242,18 +217,37 @@ justify-content: center;
         });
 		document.getElementById("div"+count).style.display = "none";
 	}
-	function search()
+	function searchUser() 
 	{
-		doucument.getElementById("container").style.display="block";
+		const searchQuery=document.getElementById("search").value;
+		console.log(searchQuery);
+		console.log("8888888");
+		$.ajax({
+            type: "GET",
+            url: "Search", 
+            data: {
+            	 searchQuery: searchQuery
+            },
+            success: function(response) {
+                document.getElementById("search1").style.display = "block";
+            },
+            error: function(xhr, status, error) {
+                
+                console.error("Error:", error);
+            }
+        });
 	}
-	if (user != null)
-		request(user.getId());
+	
+	function closePop()
+	{
+		console.log("..////.......");
+		document.getElementById("search1").style.display = "none";
+	}
 </script>
 </head>
 <body>
 	<%
-	Friendrequest fq = new Friendrequest();
-	ArrayList<User> Request = fq.getUserList();
+	ArrayList<User> Request = Friendrequest.getUserList();
 	
 	int count = 0;
 	DataBase dao = new DataBase();
@@ -278,16 +272,17 @@ justify-content: center;
 		%>
 		<%
 		if (user != null) {
-		
+			
 		%>
+		<s:include value="/chatpage.jsp" />
 		<div id="searchCon" style="width: 70%; height: 10px; float: left">
 			<form action="Search" method="post">
 				<input type="text" id="search" name="Search" placeholder="search">
-				<button onclick="submit() id="submit">submit</button>
+				<div onclick="searchUser()" id="submit">submit</div>
 		</div>
 		</form>
 		<div style="float: left; width: 10%; height: 10px; padding: 10px;">
-			<img alt="" src="message.png" id="message" style="float: left">
+			<img alt="" src="message.png" id="message" style="float: left" onclick="openContact()">
 			<form id="myForm" action="viewrequest" method="post">
 				<input type="hidden" name="senderId" value="<%=user.getId()%>">
 				<img alt="" src="connect.png" id="connect" style="float: left"
@@ -303,10 +298,12 @@ justify-content: center;
 		}
 		%>
 	</div>
-	<div id="search1" style="position: relative;height:600px;width:50%;float:left">
+	<div id="search1" >
+	<span class="close-btn1" id="close1" onclick="closePop()">&times;</span>
 	<%
 	for (User user1 :  userLists) {
 	%>
+	
 	<div id="container">
 		<div id="searchDiv">
 			<p id="searchUser"><%=user1.getName()%></p>
@@ -321,13 +318,8 @@ justify-content: center;
 	}
 	%>
 	</div>
-	<div id="contact">
-	<div id="contactDetail">
-	<div id="contactBox"></div>
-	</div>
-	<div id="messages"></div>
-	<div id="sendMessage"><input type="text" placeholder="Message" id="msg"><button style="background-color:green" id="send"><i class="material-icons">&#xe163;</i></button></div>
-	</div>
+	
+	
 	<div id="displayFriendReq">
 		<span class="close-btn" id="close" onclick="closepopup()">&times;</span>
 		
@@ -356,7 +348,7 @@ justify-content: center;
  <p>No friend requests found.</p>
 <% } %>
 
-	</div>
 	
+</div>
 </body>
 </html>

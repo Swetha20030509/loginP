@@ -20,10 +20,16 @@ public class Friendrequest extends ActionSupport {
 	private int receiverId;
 	
   private static ArrayList<User> userList=new ArrayList<User>();
-  private static ArrayList<User> acceptFriends=new ArrayList<>();
+  private static  ArrayList<User> acceptFriends=new ArrayList<>();
 	
   
-	public ArrayList<User> getUserList() {
+	public static ArrayList<User> getAcceptFriends() {
+	return acceptFriends;
+}
+public static void setAcceptFriends(ArrayList<User> acceptFriends) {
+	Friendrequest.acceptFriends = acceptFriends;
+}
+	public static ArrayList<User> getUserList() {
 		return userList;
 	}
 	public void setUserList(ArrayList<User> userList) {
@@ -71,6 +77,64 @@ public class Friendrequest extends ActionSupport {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public static ArrayList<User> getFriends(int currentUserId)
+	{
+		System.out.println(currentUserId);
+		acceptFriends=new ArrayList<>();
+		String query = "SELECT fr.id AS friend_request_id, " +
+	               "u1.id AS sender_id, " +
+	               "u1.name AS sender_name, " +
+	               "u2.id AS receiver_id, " +
+	               "u2.name AS receiver_name " +
+	               "FROM friend_requests fr " +
+	               "JOIN user u1 ON fr.senderId = u1.id " +
+	               "JOIN user u2 ON fr.receiverId = u2.id " +
+	               "WHERE fr.receiverId = ? AND fr.status = 'accepted'";
+
+		  try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		       PreparedStatement statement = conn.prepareStatement(query)) {
+		      statement.setInt(1, currentUserId);
+		      
+		      try (ResultSet resultSet = statement.executeQuery()) {
+		          while (resultSet.next()) {
+		              User user = new User();
+		              user.setId(resultSet.getInt("sender_id"));
+		              user.setName(resultSet.getString("sender_name"));
+		              acceptFriends.add(user);
+		          }
+		      }
+		  } catch (SQLException e) {
+		      e.printStackTrace();
+		     
+		  }
+		   query = "SELECT fr.id AS friend_request_id, " +
+                
+                  "u2.id AS receiver_id, " +
+                  "u2.name AS receiver_name " +
+                  "FROM friend_requests fr " +
+                  "JOIN user u1 ON fr.senderId = u1.id " +
+                  "JOIN user u2 ON fr.receiverId = u2.id " +
+                  "WHERE fr.senderId = ? AND fr.status = 'accepted'";
+
+		  try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		       PreparedStatement statement = conn.prepareStatement(query)) {
+		      statement.setInt(1, currentUserId);
+		      try (ResultSet resultSet = statement.executeQuery()) {
+		          while (resultSet.next()) {
+		              User user = new User();
+		              user.setId(resultSet.getInt("receiver_id"));
+		              user.setName(resultSet.getString("receiver_name"));
+		              acceptFriends.add(user);
+		          }
+		      }
+		  } catch (SQLException e) {
+		      e.printStackTrace();
+		     
+		  }
+				System.out.println("--------------");
+				System.out.println(acceptFriends.size()+"///////////////");
+		return acceptFriends;
 	}
 	public void displayFriendRequests()
 	{

@@ -17,20 +17,29 @@ public class UserDAO extends ActionSupport {
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "Admin";
 	static List<User> userList = new ArrayList<>();
-	String Search;
+	String searchQuery;
+
+	public String getSearchQuery() {
+		return searchQuery;
+	}
+
+	public void setSearchQuery(String searchQuery) {
+		this.searchQuery = searchQuery;
+	}
 
 	public List<User> getUser() {
 		return userList;
 	}
+	public void searchUser() 
+	{
 
-	public String execute() throws SQLException {
 		userList = new ArrayList<>();
 		String query = "SELECT * FROM  USER";
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement statement = conn.prepareStatement(query);
 				ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
-				if (!(DataBase.getUser().getUsername().equals(resultSet.getString("username")))&&(resultSet.getString("username").startsWith(getSearch()))) {
+				if (!(DataBase.getUser().getUsername().equals(resultSet.getString("username")))&&(resultSet.getString("username").startsWith(getSearchQuery()))) {
 					User user = new User();
 					user.setName(resultSet.getString("name"));
 					user.setMobileNo(resultSet.getString("mobileNo"));
@@ -38,16 +47,24 @@ public class UserDAO extends ActionSupport {
 					userList.add(user);
 				}
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return SUCCESS;
+	}
+
+	public String execute() throws SQLException {
+		
+		return null;
+		
 	}
 
 	public String getSearch() {
-		return Search;
+		return searchQuery;
 	}
 
 	public void setSearch(String search) {
-		Search = search;
+		searchQuery = search;
 	}
 
 	public Connection connection() throws SQLException {
