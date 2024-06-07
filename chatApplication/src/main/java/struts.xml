@@ -16,9 +16,14 @@
          <result name="success">index.jsp</result>
          </action>
           <action name="viewrequest" class="action.Friendrequest" method="displayFriendRequests">
-           
           </action>
            <action name="acceptrequest" class="action.Friendrequest" method="acceptRequests">
+          </action>
+           <action name="retrieve" class="action.SendMessage" method="retrieveMessage">
+         	<result name="success">chatpage.jsp</result>
+          </action>
+          <action name="send" class="action.SendMessage" method="storeMessage">
+         
           </action>
     </package>
 </struts>
