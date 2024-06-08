@@ -8,6 +8,7 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="model.Message"%>
 <%@ page import="action.SendMessage"%>
+<%@ page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -132,6 +133,24 @@ border-radius:9px;
 	margin-left:10px;
 	margin-top:10px;
 }
+#senderMsg {
+        background-color: #daf8da;
+        height:20px;
+        float:right;
+        padding:5px;
+         border-radius: 5px;
+         max-width:20%;
+         
+    }
+    #receiverMsg {
+        background-color: #daf8da;
+        height:20px;
+        float:left;
+        padding:5px;
+         border-radius: 5px;
+          max-width:20%;
+        
+    }
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -191,14 +210,14 @@ $.ajax({
 	    },
 	    
 	    success: function(response) {
-	        console.log("Message sent successfully!");
+	    	document.getElementById('messagecontainer').style.display="block";
 	    },
 	    error: function(xhr, status, error) {
 	    	
 	        console.error("Error:", error);
 	    }
 	});
-	document.getElementById('messagecontainer').style.display="block";
+	
 }
 function messageShow(send,rec,currendId,msg)
 {
@@ -206,7 +225,7 @@ function messageShow(send,rec,currendId,msg)
 	console.log(currendId);
 	if(send==currendId)
 		{
-		
+		console.log("1");
 		var containers1 = document.createElement("div");
 		containers1.id = "containers1";
 		var div = document.createElement("div");
@@ -217,6 +236,7 @@ function messageShow(send,rec,currendId,msg)
 		}
 	else
 		{
+		console.log("2");
 		console.log("....");
 		var containers1 = document.createElement("div");
 		containers1.id = "containers2";
@@ -233,6 +253,7 @@ function messageShow(send,rec,currendId,msg)
 <%
 ArrayList<User> friendList=Friendrequest.getAcceptFriends();
 User currentuser = DataBase.getUser();
+SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 %>
 <div id="contact">
     <div id="contactDetail">
@@ -253,20 +274,40 @@ User currentuser = DataBase.getUser();
     <div id="profileHead"></div>
     
         <div id="messages">
-        <% 
-            ArrayList<Message> allMessages = SendMessage.getAllmessage();
-            if (allMessages != null) {
-                for (Message msg : allMessages) {
-        %>
-                   <script>
-                    
-                    messageShow('<%=msg.getSenderId() %>','<%=msg.getReceiverId() %>','<%=currentuser.getId() %>','<%=msg.getContent() %>');
-                </script>
-        <%
+    <% 
+        ArrayList<Message> allMessages = SendMessage.getAllmessage();
+        if (allMessages != null) {
+            for (Message msg : allMessages) {
+            	String formattedTime = timeFormat.format(msg.getTimestamp());
+    %>
+    
+                <%
+                if (msg.getSenderId() == currentuser.getId()) {
+                %>
+                <div style="width:100%">
+                    <div id="senderMsg"><%= msg.getContent() %><br><%=formattedTime%></div>
+                    </div>
+                   <br> 
+                <%
+                } else {
+                %>
+                <div style="width:100%">
+                    <div id="receiverMsg"><%= msg.getContent() %></div>
+                    </div>
+                    <br>
+                <%
                 }
+                %>
+    <%
             }
-        %>
-    </div>
+        } else {
+    %>
+        <p>No messages available.</p>
+    <%
+        }
+    %>
+</div>
+
     
 
         

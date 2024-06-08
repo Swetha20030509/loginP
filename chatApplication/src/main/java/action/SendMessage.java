@@ -69,18 +69,24 @@ public class SendMessage extends ActionSupport{
                 "JOIN user sender ON m.sender_id = sender.id " +
                 "JOIN user receiver ON m.receiver_id = receiver.id " +
                 "WHERE " +
-                "m.sender_id = ? AND m.receiver_id = ?";
+                "(m.sender_id = ? AND m.receiver_id = ?) OR " +
+                "(m.sender_id = ? AND m.receiver_id = ?) " +
+                "ORDER BY m.timestamp ASC";
+
 
     	  try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
     	       PreparedStatement statement = conn.prepareStatement(selectQuery)) {
     		  statement.setInt(1, getSenderId());
     		  statement.setInt(2, getReceiverId());
+    		  statement.setInt(3, receiverId);
+    		  statement.setInt(4, senderId);
     	      try (ResultSet resultSet = statement.executeQuery()) {
     	          while (resultSet.next()) {
     	              Message message=new Message();
     	              message.setSenderId(resultSet.getInt("sender_id"));
     	              message.setReceiverId(resultSet.getInt("receiver_id"));
     	              message.setContent(resultSet.getString("content"));
+    	              message.setTimestamp(resultSet.getTimestamp("timestamp"));
     	              allmessage.add(message);
     	          }
     	      }
@@ -89,42 +95,10 @@ public class SendMessage extends ActionSupport{
     	     
     	  }
     	  System.out.println(allmessage.size()+".....");
-    	  selectQuery = "SELECT " +
-                  "m.id AS message_id, " +
-                  "m.content AS content, " +
-                  "m.timestamp, " +
-                  "sender.id AS sender_id, " +
-                  "sender.name AS sender_name, " +
-                  "receiver.id AS receiver_id, " +
-                  "receiver.name AS receiver_name " +
-                  "FROM " +
-                  "messages m " +
-                  "JOIN user sender ON m.sender_id = sender.id " +
-                  "JOIN user receiver ON m.receiver_id = receiver.id " +
-                  "WHERE " +
-                  "m.sender_id = ? AND m.receiver_id = ?";
-
-      	  try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-      	       PreparedStatement statement = conn.prepareStatement(selectQuery)) {
-      		  statement.setInt(1, getReceiverId());
-      		  statement.setInt(2, getSenderId());
-      	      try (ResultSet resultSet = statement.executeQuery()) {
-      	          while (resultSet.next()) {
-      	              Message message=new Message();
-      	              message.setSenderId(resultSet.getInt("sender_id"));
-      	              message.setReceiverId(resultSet.getInt("receiver_id"));
-      	              message.setContent(resultSet.getString("content"));
-      	              allmessage.add(message);
-      	          }
-      	      }
-      	  } catch (SQLException e) {
-      	      e.printStackTrace();
-      	     
-      	  }
-      	  System.out.println(allmessage.size()+".....");
+    	  
     	  return SUCCESS;
     }
-    public void storeMessage()
+    public String storeMessage()
     {
     	String insertQuery = "INSERT INTO messages (sender_id, receiver_id, content) VALUES (?, ?, ?)";
     	   try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -139,6 +113,6 @@ public class SendMessage extends ActionSupport{
   	            e.printStackTrace();
   	           
   	        }
-       
+       return SUCCESS;
     }
 }

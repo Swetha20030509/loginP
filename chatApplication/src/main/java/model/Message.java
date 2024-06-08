@@ -1,10 +1,16 @@
 package model;
-
+import java.util.Date;
 public class Message {
 	private int senderId;
     private int receiverId;
     private String content;
-	private long timestamp;
+    private Date timestamp;
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
 	public int getSenderId() {
 		return senderId;
 	}
@@ -23,12 +29,7 @@ public class Message {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public long getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
+	
 	
 	
 

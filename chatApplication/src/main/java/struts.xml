@@ -23,7 +23,7 @@
          	<result name="success">chatpage.jsp</result>
           </action>
           <action name="send" class="action.SendMessage" method="storeMessage">
-         
+         <result name="success">chatpage.jsp</result>
           </action>
     </package>
 </struts>
