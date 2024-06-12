@@ -27,7 +27,7 @@ public class DataBase {
 				e.printStackTrace();
 			}
 	    }
-	   
+	  
 	    public static User validateUser(String mobileNo, String password) {
 	        String sql = "SELECT * FROM user WHERE mobileNo = ? AND password = ?";
 	        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -85,6 +85,40 @@ public class DataBase {
 	    {
 	    	return user;
 	    }
+	    public String isFriends(int  senderId,int receiverId)
+	    {
+	    	 String query = "SELECT * FROM friend_requests WHERE senderId = ? AND receiverId = ?";
+	         try (Connection connection =DriverManager.getConnection(URL, USERNAME, PASSWORD);
+	              PreparedStatement statement = connection.prepareStatement(query)) {
+	             statement.setInt(1,  senderId);
+	             statement.setInt(2, receiverId);
+	             ResultSet resultSet = statement.executeQuery();
+	            if(resultSet.next())
+	            {
+	            	return resultSet.getString(4);
+	            }
+	         } catch (SQLException e) {
+	             e.printStackTrace();
+	             return null;
+	         }
+	          query = "SELECT * FROM friend_requests WHERE senderId = ? AND receiverId = ?";
+	         try (Connection connection =DriverManager.getConnection(URL, USERNAME, PASSWORD);
+	              PreparedStatement statement = connection.prepareStatement(query)) {
+	             statement.setInt(1,  receiverId);
+	             statement.setInt(2, senderId);
+	             ResultSet resultSet = statement.executeQuery();
+	            if(resultSet.next())
+	            {
+	            	return resultSet.getString(4);
+	            }
+	         } catch (SQLException e) {
+	             e.printStackTrace();
+	             return null;
+	         }
+	        
+	         return "send";
+	     }
+	    	
 		public static boolean userExists(String mobileNo, String password) {
 			  String sql = "SELECT * FROM user WHERE mobileNo = ? OR password = ?";
 	        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -95,7 +129,7 @@ public class DataBase {
 	               try (ResultSet rs = stmt.executeQuery()) {
 	                    if(rs.next())
 	                    {
-	                    	int count=rs.getInt(1);
+	                    	int count=rs.getInt(2);
 	                        return count>0;
 	                    } 
 	               }

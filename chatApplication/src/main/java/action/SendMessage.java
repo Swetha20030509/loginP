@@ -19,8 +19,8 @@ public class SendMessage extends ActionSupport{
     private int senderId;
     private int receiverId;
     private String content;
-     static ArrayList<Message> allmessage=new ArrayList<>();
-    public static ArrayList<Message> getAllmessage() {
+     ArrayList<Message> allmessage=new ArrayList<>();
+    public  ArrayList<Message> getAllmessage() {
 		return allmessage;
 	}
 

@@ -18,25 +18,29 @@
 	height:500px;
 	width:98%;
 	margin-top:50px;
-	background-color:#f5f5fb;
+	background-color:#e1e3f0;
 	 position: absolute;
-	 
-	
+	  box-shadow: 10px 10px 20px 0 rgba(0, 0, 0, 0.5);
+	border-radius:30px;
+	margin-top:70px;
+	display:none;
 }
 #contactDetail
 {
 	height:500px;
 	width:35%;
-	border:1px solid black;
-	background-color:#252556;
+	
+	background-color:#c4c8eb;
+	 box-shadow: 5px 5px 10px #c4c8eb;
 	float:left;
 	overflow-y: scroll;
+	border-radius:30px;
 }
 #messages
 {
-	height:390px;
+	height:350px;
 	width:100%;
-	border:1px solid blue;
+	
 	float:left;
 	overflow-y: scroll;
 }
@@ -44,7 +48,7 @@
 {
 	height:60px;
 	width:100%;
-	border:1px solid black;
+	
 	float:left;
 	postion: absolute;
 }
@@ -58,7 +62,7 @@
     margin-top: 20px;
     font-size: 20px;
     font-weight: bold;
-    color: white; 
+    color: black; 
     cursor: pointer; 
 }
 #contactBox:hover
@@ -75,10 +79,10 @@
 #msg
 {
 		height:40px;
-		width:300px;
+		width:700px;
 		border-radius:15px;
 		margin-top:10px;
-		margin-left:390px;
+		
 }
 
 #send
@@ -135,22 +139,34 @@ border-radius:9px;
 }
 #senderMsg {
         background-color: #daf8da;
-        height:20px;
         float:right;
-        padding:5px;
          border-radius: 5px;
-         max-width:20%;
-         
+          padding: 5px;
+         max-width:40%;     
+          word-wrap: break-word;  
     }
     #receiverMsg {
         background-color: #daf8da;
-        height:20px;
         float:left;
-        padding:5px;
          border-radius: 5px;
-          max-width:20%;
+          max-width:40%;
+           padding: 5px;
+           word-wrap: break-word; 
         
     }
+    .message-container {
+            width: 100%;
+            
+            margin-bottom: 10px;
+            overflow: auto; /* Clearfix alternative */
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .time{
+	
+	padding:2px;
+	font-size:15px;
+}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -197,6 +213,7 @@ function addMessage(msg)
 	}
 function viewUser(recevierId,senderId)
 {
+	
 	document.getElementById('sen').value=senderId;
 	document.getElementById('rec').value=recevierId;
 $.ajax({
@@ -208,16 +225,40 @@ $.ajax({
 	        receiverId: recevierId,
 	       
 	    },
-	    
+	    dataType: "json",
 	    success: function(response) {
-	    	document.getElementById('messagecontainer').style.display="block";
-	    },
-	    error: function(xhr, status, error) {
 	    	
-	        console.error("Error:", error);
-	    }
-	});
-	
+	    	$("#messages").empty();
+	    	console.log(response);
+	    	var messages = response.allmessage;
+           
+
+            messages.forEach(function(msg) {
+            	
+                var messageContainer = document.createElement("div");
+                messageContainer.className = "message-container";
+
+                var messageDiv = document.createElement("div");
+                if (msg.senderId == senderId) {
+                    messageDiv.id = "senderMsg";
+                } else {
+                    messageDiv.id = "receiverMsg";
+                }
+
+                messageDiv.innerHTML = msg.content + "<sub class='time'>" + msg.timestamp + "</sub>";
+                messageContainer.appendChild(messageDiv);
+
+                document.getElementById("messages").appendChild(messageContainer);
+            });
+
+            // Show the message container
+            document.getElementById('messagecontainer').style.display = "block";
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+
 }
 function messageShow(send,rec,currendId,msg)
 {
@@ -247,13 +288,14 @@ function messageShow(send,rec,currendId,msg)
 		document.getElementById("messages").appendChild(containers1);
 		}
 }
+
 </script>
 </head>
 <body>
 <%
 ArrayList<User> friendList=Friendrequest.getAcceptFriends();
 User currentuser = DataBase.getUser();
-SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+
 %>
 <div id="contact">
     <div id="contactDetail">
@@ -274,38 +316,17 @@ SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
     <div id="profileHead"></div>
     
         <div id="messages">
-    <% 
-        ArrayList<Message> allMessages = SendMessage.getAllmessage();
-        if (allMessages != null) {
-            for (Message msg : allMessages) {
-            	String formattedTime = timeFormat.format(msg.getTimestamp());
-    %>
     
-                <%
-                if (msg.getSenderId() == currentuser.getId()) {
-                %>
-                <div style="width:100%">
-                    <div id="senderMsg"><%= msg.getContent() %><br><%=formattedTime%></div>
+       
+                <div class="message-container">
+                    <div id="senderMsg"><sub class="time"></sub></div>
                     </div>
-                   <br> 
-                <%
-                } else {
-                %>
-                <div style="width:100%">
-                    <div id="receiverMsg"><%= msg.getContent() %></div>
+                  
+               
+               <div class="message-container">
+                    <div id="receiverMsg"><sub class="time"></sub></div>
                     </div>
-                    <br>
-                <%
-                }
-                %>
-    <%
-            }
-        } else {
-    %>
-        <p>No messages available.</p>
-    <%
-        }
-    %>
+ 
 </div>
 
     

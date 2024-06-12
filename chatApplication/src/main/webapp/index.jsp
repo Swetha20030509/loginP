@@ -16,24 +16,32 @@
 <script src='https://kit.fontawesome.com/a076d05399.js'
 	crossorigin='anonymous'></script>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 #nav {
 	height: 50px;
-	width: 100%;
+	width: 98%;
 	box-shadow: 10px 10px 20px 5px rgba(0, 0, 0, 0.5);
+	background-color:#130da6;
+	padding:10px;
 }
-
+body
+{
+	background-color:#aeadc0;
+}
 .welcome {
 	margin-left: 80%;
 	display: inline;
 }
 
 #search {
-	height: 30px;
-	width: 60%;
-	border-radius: 10px;
-	margin-left: 150px;
-	margin-top: 5px;
+	height: 40px;
+	width: 75%;
+	border-radius: 20px;
+	border:1px solid white;
+	background-color:white;
+	box-shadow: 10px 10px 20px 5px rgba(0, 0, 0, 0.5);
+	float:left;
 }
 
 #login1 {
@@ -102,14 +110,13 @@
 
 #submit {
 	height: 40px;
-	width: 100px;
-	margin-left: 10px;
-	background-color: rgb(133, 51, 255);
-	border: 1px solid #8533ff;
+	width: 40px;
+	margin-left: 5px;
+	
+	text-align:center;
 	color: white;
-	border-radius: 10px;
-	box-shadow: 1px 1px 5px rgb(133, 51, 255);
-	float:right;
+	margin-top:10px;
+	float:left;
 	cursor:pointer;
 }
 .userDetail {
@@ -137,9 +144,7 @@
 	position: relative;
 	margin-left:350px;
 	display:none;
-}
-
-	
+}	
 }
 #accept
 {
@@ -168,6 +173,30 @@ position: absolute;
 	margin-left:320px;
 	cursor: pointer;
 	font-size: 40px;
+}
+#profile1
+{
+	height:300px;
+	width:300px;
+	
+	margin-left:900px;
+	margin-top:20px;
+	background-color:white;
+	box-shadow: 5px 10px 18px #888888;
+}
+#profileOut
+{
+	height:100px;
+	width:100px;
+	border:1px solid black;
+	border-radius:50px;
+	margin:auto;
+}
+#logout
+{
+margin-left:100px;
+height:40px;
+width:100px;
 }
 </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -275,24 +304,23 @@ position: absolute;
 			
 		%>
 		<s:include value="/chatpage.jsp" />
-		<div id="searchCon" style="width: 70%; height: 10px; float: left">
+		<div id="searchCon" style="width: 40%; height: 10px; float: left;margin-left:200px;">
 			<form action="Search" method="post">
 				<input type="text" id="search" name="Search" placeholder="search">
-				<div onclick="searchUser()" id="submit">submit</div>
+				<div onclick="searchUser()" id="submit"><i class="fa fa-search" style="font-size:25px"></i></div>
 		</div>
 		</form>
-		<div style="float: left; width: 10%; height: 10px; padding: 10px;">
-			<img alt="" src="message.png" id="message" style="float: left" onclick="openContact()">
+		<div style="float: left; width: 20%; height: 10px; padding: 10px;">
+			<img alt="" src="comment.png" id="message" style="float: left" onclick="openContact()">
 			<form id="myForm" action="viewrequest" method="post">
 				<input type="hidden" name="senderId" value="<%=user.getId()%>">
-				<img alt="" src="connect.png" id="connect" style="float: left"
+				<img alt="" src="add-friend.png" id="connect" style="float: left"
 					onclick="request()">
 			</form>
 		</div>
 		<div style="float: left">
-			<span
-				style="color: rgb(133, 51, 255); font-family: Arial, Helvetica, sans-serif; font-weight: bold;"><%=user.getName()%></span>
-			<img alt="" src="icon.jpg" id="icon">
+			<div style="height :20px; text-align: right;width:150px;float: left;color: white; font-family: Arial, Helvetica, sans-serif; font-weight: bold; padding-top: 15px; padding-right: 10px;"><%=user.getName()%></div>
+			<img alt="" src="profile-user.png" id="icon">
 		</div>
 		<%
 		}
@@ -308,12 +336,39 @@ position: absolute;
 		<div id="searchDiv">
 			<p id="searchUser"><%=user1.getName()%></p>
 		</div>
+		<%if(user!=null&&user1!=null) {%>
+		<%
+			if(dao.isFriends(user.getId(),user1.getId()).equals("accepted"))
+			{
+		%>
+		 <form action="chat">
+            <input type="hidden" name="senderId" value="<%= user.getId() %>">
+            <input type="hidden" name="receiverId" value="<%= user1.getId() %>">
+            <button id="req">Chat</button>
+        </form>
+        <% }
+			else if(dao.isFriends(user.getId(),user1.getId()).equals("pending"))
+			{
+		%>
+		 <form action="request">
+            <input type="hidden" name="senderId" value="<%= user.getId() %>">
+            <input type="hidden" name="receiverId" value="<%= user1.getId() %>">
+            <button id="req">request</button>
+        </form>
+        <%}
+         else{ %>
 		<form action="request">
 			<input type="hidden" name="senderId" value="<%=user.getId()%>">
 			<input type="hidden" name="receiverId" value="<%=user1.getId()%>">
 			<button id="req">Send Request</button>
 		</form>
+		<%
+			}
+		%>
 	</div>
+	<%
+	}
+	%>
 	<%
 	}
 	%>
@@ -349,6 +404,15 @@ position: absolute;
 <% } %>
 
 	
+</div>
+<div id="profile1">
+	<div id="profileOut"><img alt="" src="profile-user.png" style="height:100px; width:100px">
+	</div>
+	<img alt="" src="plus.png" style="height:30px; width:30px;margin-left:170px;margin-top:-40px">
+	<div style="height:100px;width:100px;border:1px ">
+		<p>Name</p>
+	</div>
+	<button id="logout">LOGOUT</button>
 </div>
 </body>
 </html>
