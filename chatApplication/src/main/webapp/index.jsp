@@ -178,9 +178,6 @@ position: absolute;
 {
 	height:300px;
 	width:300px;
-	
-	margin-left:900px;
-	margin-top:20px;
 	background-color:white;
 	box-shadow: 5px 10px 18px #888888;
 }
@@ -201,6 +198,35 @@ width:100px;
 </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+   document.getElementById("upload").addEventListener('click',function(e){
+	document.getElementById("file").click();     
+	})
+	document.getElementById("file").addEventListener('change',function(e){
+	var file=e.target.files[0];
+	var reader=new FileReader();
+	reader.onload=function(e){
+	 document.getElementById("profileOut").src=e.target.result;
+	}
+	
+	reader.readAsDataURL(file);
+	})
+	
+	window.sendImage=function(formData) {
+    $.ajax({
+        url: "sendImage", 
+        type: "POST", 
+        data: formData,  
+        processData: false, 
+        contentType: false, 
+        success: function(response) { 
+            console.log('File uploaded successfully:');
+        },
+        error: function(xhr, status, error) { 
+            console.error('Failed to upload file:', error);
+        }
+    });
+}
+	
 	function openContact()
 	{
 		document.getElementById("contact").style.display="block";
@@ -272,6 +298,18 @@ width:100px;
 		console.log("..////.......");
 		document.getElementById("search1").style.display = "none";
 	}
+	function viewProfile()
+	{
+		console.log("........./////2353..");
+		
+		document.getElementById("profile1").style.display = "block";
+		
+		console.log(".......");
+		
+	}
+	
+	
+	
 </script>
 </head>
 <body>
@@ -282,8 +320,7 @@ width:100px;
 	DataBase dao = new DataBase();
 	UserDAO userdao = new UserDAO();
 	List<User> userLists = userdao.getUser();
-	User user = dao.getUser();
-	
+	User user = dao.getUser();	
 	%>
 	<div id="nav">
 		<%
@@ -301,7 +338,6 @@ width:100px;
 		%>
 		<%
 		if (user != null) {
-			
 		%>
 		<s:include value="/chatpage.jsp" />
 		<div id="searchCon" style="width: 40%; height: 10px; float: left;margin-left:200px;">
@@ -319,8 +355,10 @@ width:100px;
 			</form>
 		</div>
 		<div style="float: left">
-			<div style="height :20px; text-align: right;width:150px;float: left;color: white; font-family: Arial, Helvetica, sans-serif; font-weight: bold; padding-top: 15px; padding-right: 10px;"><%=user.getName()%></div>
-			<img alt="" src="profile-user.png" id="icon">
+			<div style="height :20px; text-align: right;width:150px;float: left;color: white; font-family: Arial, Helvetica, sans-serif; font-weight: bold; padding-top: 15px; padding-right: 10px;"><%=user.getName()%>
+			</div>
+			<img alt="img" src="profile-user.png" id="icon" onclick="viewProfile()">
+			
 		</div>
 		<%
 		}
@@ -403,16 +441,20 @@ width:100px;
  <p>No friend requests found.</p>
 <% } %>
 
-	
 </div>
-<div id="profile1">
+<div id="profile1" style="display: none">
 	<div id="profileOut"><img alt="" src="profile-user.png" style="height:100px; width:100px">
 	</div>
-	<img alt="" src="plus.png" style="height:30px; width:30px;margin-left:170px;margin-top:-40px">
+	
+	<img id="upload" alt="" src="plus.png" style="height:30px; width:30px;margin-left:170px;margin-top:-40px" >
+	<input type="file" name="profilePicture" id="fileInput" style="display: none;">
 	<div style="height:100px;width:100px;border:1px ">
 		<p>Name</p>
 	</div>
+	
 	<button id="logout">LOGOUT</button>
 </div>
+
+
 </body>
 </html>

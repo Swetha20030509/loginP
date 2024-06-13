@@ -138,9 +138,8 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 	}
 	public void displayFriendRequests()
 	{
-		
+		userList=new ArrayList<User>();
 		int currentUserId=DataBase.getUser().getId();
-		 userList=new ArrayList<User>();
 		 String query = "SELECT fr.id AS friend_request_id, " +
 	               "u1.id AS id, " +
 	               "u1.name AS sender_name, " +
@@ -163,15 +162,11 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
       }
   } catch (SQLException e) {
       e.printStackTrace();
-     
   }
-
-		System.out.println("--------------");
 		System.out.println(userList.size()+"***********");
 	}
 	public Connection connection() throws SQLException
 	{
 		return DriverManager.getConnection(URL, USERNAME, PASSWORD);
 	}
-	
 }

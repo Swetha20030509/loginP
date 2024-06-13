@@ -55,6 +55,8 @@ public class SendMessage extends ActionSupport{
     }
     public String retrieveMessage()
     {
+    	System.out.println(getSenderId()+"sen");
+    	System.out.println(receiverId+"rec");
     	allmessage=new ArrayList<>();
     	String selectQuery = "SELECT " +
                 "m.id AS message_id, " +
@@ -78,8 +80,8 @@ public class SendMessage extends ActionSupport{
     	       PreparedStatement statement = conn.prepareStatement(selectQuery)) {
     		  statement.setInt(1, getSenderId());
     		  statement.setInt(2, getReceiverId());
-    		  statement.setInt(3, receiverId);
-    		  statement.setInt(4, senderId);
+    		  statement.setInt(3, getReceiverId());
+    		  statement.setInt(4,  getSenderId());
     	      try (ResultSet resultSet = statement.executeQuery()) {
     	          while (resultSet.next()) {
     	              Message message=new Message();
@@ -95,6 +97,7 @@ public class SendMessage extends ActionSupport{
     	     
     	  }
     	  System.out.println(allmessage.size()+".....");
+    	  
     	  
     	  return SUCCESS;
     }
