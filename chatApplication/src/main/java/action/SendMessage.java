@@ -59,9 +59,9 @@ public class SendMessage extends ActionSupport{
     	System.out.println(receiverId+"rec");
     	allmessage=new ArrayList<>();
     	String selectQuery = "SELECT " +
-                "m.id AS message_id, " +
+               
                 "m.content AS content, " +
-                "m.timestamp, " +
+                "m.time, " +
                 "sender.id AS sender_id, " +
                 "sender.name AS sender_name, " +
                 "receiver.id AS receiver_id, " +
@@ -73,7 +73,7 @@ public class SendMessage extends ActionSupport{
                 "WHERE " +
                 "(m.sender_id = ? AND m.receiver_id = ?) OR " +
                 "(m.sender_id = ? AND m.receiver_id = ?) " +
-                "ORDER BY m.timestamp ASC";
+                "ORDER BY m.time ASC";
 
 
     	  try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -88,7 +88,7 @@ public class SendMessage extends ActionSupport{
     	              message.setSenderId(resultSet.getInt("sender_id"));
     	              message.setReceiverId(resultSet.getInt("receiver_id"));
     	              message.setContent(resultSet.getString("content"));
-    	              message.setTimestamp(resultSet.getTimestamp("timestamp"));
+    	              message.setTimestamp(resultSet.getTimestamp("time"));
     	              allmessage.add(message);
     	          }
     	      }
@@ -96,7 +96,7 @@ public class SendMessage extends ActionSupport{
     	      e.printStackTrace();
     	     
     	  }
-    	  System.out.println(allmessage.size()+".....");
+    	  System.out.println(allmessage.size()+".....nnnnn");
     	  
     	  
     	  return SUCCESS;

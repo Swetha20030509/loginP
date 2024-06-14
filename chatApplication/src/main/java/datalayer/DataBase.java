@@ -46,6 +46,7 @@ public class DataBase {
 	            		user.setMobileNo(rs.getString(2));
 	            		user.setUsername(rs.getString(3));
 	            		user.setPassword(rs.getNString(4));
+	            		user.setImage(rs.getNString(6));
 	            		System.out.println(user.getName());
 	            		
 	            		return user;

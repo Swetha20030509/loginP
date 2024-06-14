@@ -13,8 +13,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src='https://kit.fontawesome.com/a076d05399.js'
-	crossorigin='anonymous'></script>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -198,35 +197,7 @@ width:100px;
 </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-   document.getElementById("upload").addEventListener('click',function(e){
-	document.getElementById("file").click();     
-	})
-	document.getElementById("file").addEventListener('change',function(e){
-	var file=e.target.files[0];
-	var reader=new FileReader();
-	reader.onload=function(e){
-	 document.getElementById("profileOut").src=e.target.result;
-	}
-	
-	reader.readAsDataURL(file);
-	})
-	
-	window.sendImage=function(formData) {
-    $.ajax({
-        url: "sendImage", 
-        type: "POST", 
-        data: formData,  
-        processData: false, 
-        contentType: false, 
-        success: function(response) { 
-            console.log('File uploaded successfully:');
-        },
-        error: function(xhr, status, error) { 
-            console.error('Failed to upload file:', error);
-        }
-    });
-}
-	
+   
 	function openContact()
 	{
 		document.getElementById("contact").style.display="block";
@@ -292,7 +263,52 @@ width:100px;
             }
         });
 	}
-	
+	function handleFileInputChange(event) {
+		console.log("swetha");
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var profileImg = document.getElementById("profileOut");
+                if (profileImg) {
+                    profileImg.src = e.target.result;
+                } else {
+                    console.error("Element with ID 'profileImg' not found.");
+                }
+            };
+            reader.readAsDataURL(file);
+
+            // Log file name
+            console.log("File selected:", file.name);
+
+            
+            var formData = new FormData();
+            formData.append('profileData', file);
+            formData.append('userId', document.getElementById('userId').value); // Append user ID
+
+        //   console.log(formData+"????????????");
+            $.ajax({
+                type: "POST",
+                url: "updateProfile", 
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    alert("Profile picture updated successfully!");
+                   // console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        } else {
+            console.error("No file selected.");
+        }
+    }
+	function updateProfile()
+	{
+		 document.getElementById('fileInput').click();
+	}
 	function closePop()
 	{
 		console.log("..////.......");
@@ -300,11 +316,9 @@ width:100px;
 	}
 	function viewProfile()
 	{
-		console.log("........./////2353..");
 		
 		document.getElementById("profile1").style.display = "block";
 		
-		console.log(".......");
 		
 	}
 	
@@ -321,6 +335,7 @@ width:100px;
 	UserDAO userdao = new UserDAO();
 	List<User> userLists = userdao.getUser();
 	User user = dao.getUser();	
+	User user1;
 	%>
 	<div id="nav">
 		<%
@@ -338,7 +353,9 @@ width:100px;
 		%>
 		<%
 		if (user != null) {
+			user1=user;
 		%>
+		<input type="hidden" value="<%=user.getId() %>" id="userId">
 		<s:include value="/chatpage.jsp" />
 		<div id="searchCon" style="width: 40%; height: 10px; float: left;margin-left:200px;">
 			<form action="Search" method="post">
@@ -442,19 +459,22 @@ width:100px;
 <% } %>
 
 </div>
+<%if(user!=null){ 
+	System.out.println(user.getImage()+"000000");
+	%>
 <div id="profile1" style="display: none">
-	<div id="profileOut"><img alt="" src="profile-user.png" style="height:100px; width:100px">
+	<div id="profileOut"><img alt="" src="<%= user.getImage() %>" style="height:100px; width:100px">
 	</div>
 	
-	<img id="upload" alt="" src="plus.png" style="height:30px; width:30px;margin-left:170px;margin-top:-40px" >
-	<input type="file" name="profilePicture" id="fileInput" style="display: none;">
+	<img id="upload" alt="" src="plus.png" style="height:30px; width:30px;margin-left:170px;margin-top:-40px" onclick="updateProfile()" >
+  <input type="file" name="profileData"" id="fileInput" style="display: none;" onchange="handleFileInputChange(event)">
 	<div style="height:100px;width:100px;border:1px ">
 		<p>Name</p>
 	</div>
 	
 	<button id="logout">LOGOUT</button>
 </div>
-
-
+<% 
+} %>
 </body>
 </html>

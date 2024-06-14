@@ -27,6 +27,8 @@
           <action name="send" class="action.SendMessage" method="storeMessage">
           <result name="success">chatpage.jsp</result>
           </action>
-          
+            <action name="updateProfile" class="action.UpdateProfileAction">
+            <result name="success">index.jsp</result>
+            </action>
     </package>
 </struts>

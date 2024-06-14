@@ -6,7 +6,7 @@ public class User {
 	private String name;
 	private String mobileNo;
 	private int id;
-	
+	private String imagePath;
 	public int getId() {
 		return id;
 	}
@@ -36,6 +36,14 @@ public class User {
 	}
 	public void setMobileNo(String mobileNo) {
 		this.mobileNo = mobileNo;
+	}
+	public void setImage(String nString) {
+		imagePath=nString;
+		
+	}
+	public String getImage()
+	{
+		return imagePath;
 	}
 	
 }

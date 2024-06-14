@@ -80,7 +80,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 	}
 	public static ArrayList<User> getFriends(int currentUserId)
 	{
-		System.out.println(currentUserId);
+		System.out.println(currentUserId+".....");
 		acceptFriends=new ArrayList<>();
 		String query = "SELECT fr.id AS friend_request_id, " +
 	               "u1.id AS sender_id, " +
@@ -138,6 +138,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 	}
 	public void displayFriendRequests()
 	{
+		System.out.println("....//hhhh");
 		userList=new ArrayList<User>();
 		int currentUserId=DataBase.getUser().getId();
 		 String query = "SELECT fr.id AS friend_request_id, " +
