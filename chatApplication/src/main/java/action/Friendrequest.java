@@ -19,7 +19,7 @@ public class Friendrequest extends ActionSupport {
 	private int senderId;
 	private int receiverId;
 	
-  private static ArrayList<User> userList=new ArrayList<User>();
+ 
   private static  ArrayList<User> acceptFriends=new ArrayList<>();
 	
   
@@ -29,12 +29,7 @@ public class Friendrequest extends ActionSupport {
 public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 	Friendrequest.acceptFriends = acceptFriends;
 }
-	public static ArrayList<User> getUserList() {
-		return userList;
-	}
-	public void setUserList(ArrayList<User> userList) {
-		this.userList = userList;
-	}
+	
 	public int getSenderId() {
 		return senderId;
 	}
@@ -62,7 +57,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 	}
 	
 	
-	public void acceptRequests()
+	public String acceptRequests()
 	{
 		//System.out.println("==================");
 		//System.out.println(getSenderId()+"********");
@@ -77,6 +72,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return SUCCESS;
 	}
 	public static ArrayList<User> getFriends(int currentUserId)
 	{
@@ -85,6 +81,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 		String query = "SELECT fr.id AS friend_request_id, " +
 	               "u1.id AS sender_id, " +
 	               "u1.name AS sender_name, " +
+	               "u1.profileimage AS  profileimage," +
 	               "u2.id AS receiver_id, " +
 	               "u2.name AS receiver_name " +
 	               "FROM friend_requests fr " +
@@ -101,6 +98,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 		              User user = new User();
 		              user.setId(resultSet.getInt("sender_id"));
 		              user.setName(resultSet.getString("sender_name"));
+		              user.setImage(resultSet.getString("profileimage"));
 		              acceptFriends.add(user);
 		          }
 		      }
@@ -111,7 +109,8 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 		   query = "SELECT fr.id AS friend_request_id, " +
                 
                   "u2.id AS receiver_id, " +
-                  "u2.name AS receiver_name " +
+                  "u2.name AS receiver_name, " +
+                  "u2.profileimage AS profileimage " +
                   "FROM friend_requests fr " +
                   "JOIN user u1 ON fr.senderId = u1.id " +
                   "JOIN user u2 ON fr.receiverId = u2.id " +
@@ -125,6 +124,8 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 		              User user = new User();
 		              user.setId(resultSet.getInt("receiver_id"));
 		              user.setName(resultSet.getString("receiver_name"));
+		              user.setImage(resultSet.getString("profileimage"));
+		              System.out.println(user.getImage()+"===");
 		              acceptFriends.add(user);
 		          }
 		      }
@@ -136,10 +137,10 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
 				System.out.println(acceptFriends.size()+"///////////////");
 		return acceptFriends;
 	}
-	public void displayFriendRequests()
+	public  static ArrayList<User> displayFriendRequests()
 	{
 		System.out.println("....//hhhh");
-		userList=new ArrayList<User>();
+		 ArrayList<User> userList=new ArrayList<User>();
 		int currentUserId=DataBase.getUser().getId();
 		 String query = "SELECT fr.id AS friend_request_id, " +
 	               "u1.id AS id, " +
@@ -165,6 +166,7 @@ public static void setAcceptFriends(ArrayList<User> acceptFriends) {
       e.printStackTrace();
   }
 		System.out.println(userList.size()+"***********");
+		return userList;
 	}
 	public Connection connection() throws SQLException
 	{

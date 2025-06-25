@@ -7,76 +7,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up Form</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+   #signUpOuter
+   {
+   	background-color:white;
+   	height:500px;
+   	width:500px;
+   	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+   	margin:auto;
+   	
+  margin-top: 50px;    
+  
+   }
+    input
+    {
+    height:40px;
+	width:300px;
+	 margin: 10px 0;
+	
+	border:1px solid white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+	border-radius: 10px;
+	font-color:black;
+	font-weight:bold;
     }
-
-    .container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 300px;
+    #signupButton
+    {
+    	background-image:linear-gradient(to right,#4ebbec, #061ea0);
+    	color:white;
+	font-size:16px;
+	font-weight:bold;
+    	border:1px solid #4ebbec;
     }
-
-    .container h2 {
-      text-align: center;
+    #signupButton:hover
+    {
+    	background-image:linear-gradient(to right,#061ea0,#4ebbec);
     }
-
-    .form-group {
-      margin-bottom: 20px;
+    #titleSignup
+    {
+    	color:#1939ee;
+    	 margin-left:180px;
+    	
+    	font-size:35px;
+    	
+    	
+    	
     }
-
-    .form-group label {
-      display: block;
-      font-weight: bold;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .form-group input[type="submit"] {
-      background-color: #007bff;
-      color: #fff;
-      cursor: pointer;
-    }
+   #close
+{
+cursor:pointer;
+position: absolute;
+	margin-left:320px;
+	cursor: pointer;
+	font-size: 40px;
+	margin-left:150px;
+}
+#container
+{
+   display: flex;
+  flex-direction: column;      
+  align-items: center; 
+  height:500px;
+   	width:500px;
+   	margin-top:50px;
+}
+a{
+	 text-decoration: none;
+	 display: inline-block;
+  font-size: 18px;
+  font-weight:bold;
+  transition: color 0.3s ease;
+}
+a:hover
+{
+	color: #0056b3;
+  text-decoration: underline;
+}
+body
+{
+	background-color:#cfe0ee;
+}
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Sign Up</h2>
+  
   <form action="SignUp" method="post">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-    </div>
-    <div class="form-group">
-      <label for="email">PhoneNumber:</label>
-      <input type="text" id="phonenumber" name="mobileNo" required>
-    </div>
-    <div class="form-group">
-      <label for="username">name:</label>
-      <input type="text" id="name" name="name" required>
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-    </div>
-    <div class="form-group">
-      <input type="submit" value="Sign Up">
-    </div>
+  	
+    	<div id="signUpOuter">
+    	
+    	<h1 id="titleSignup">Sign Up</h1>
+    	
+    	
+    	<div id="container">
+      <input type="text" id="username" name="username" placeholder="username" required>
+   
+      <input type="text" id="phonenumber" name="mobileNo" placeholder="phonenumber" required>
+    
+   
+      <input type="text" id="name" name="name" placeholder="name" required>
+    
+      <input type="password" id="password" name="password" placeholder="password" required>
+    
+    
+      <input type="submit" value="Sign Up" id="signupButton">
+      <p>Already have an acccount ?</p>
+		<a href="index.jsp">Login</a>
+		</div>
+      </div>
   </form>
 </div>
 

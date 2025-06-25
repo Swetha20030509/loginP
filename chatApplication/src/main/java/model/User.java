@@ -7,6 +7,19 @@ public class User {
 	private String mobileNo;
 	private int id;
 	private String imagePath;
+	 private String friendStatus; 
+	public String getImagePath() {
+		return imagePath;
+	}
+	public String getFriendStatus() {
+		return friendStatus;
+	}
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	public void setFriendStatus(String friendStatus) {
+		this.friendStatus = friendStatus;
+	}
 	public int getId() {
 		return id;
 	}
@@ -38,7 +51,7 @@ public class User {
 		this.mobileNo = mobileNo;
 	}
 	public void setImage(String nString) {
-		imagePath=nString;
+		this.imagePath=nString;
 		
 	}
 	public String getImage()

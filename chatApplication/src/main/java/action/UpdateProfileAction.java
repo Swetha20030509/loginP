@@ -1,6 +1,6 @@
 package action;
 
-import java.io.File;
+import java.io.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,100 +14,54 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public class UpdateProfileAction extends ActionSupport {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/chatApplication";
+	private File dp;                    // Uploaded file
+    private String dpFileName;  // Filename
+    private int userId;
+    public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+
+	private static final String URL = "jdbc:mysql://localhost:3306/ chatApplication";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Admin";
+//    private String dpContentType;       // MIME type
 
-    private File profileData;
-    private String profileDataContentType;
-    private String profileDataFileName;
-    private int userId;
+    public void setDp(File dp) { this.dp = dp; }
+    public void setDpFileName(String dpFileName) { this.dpFileName = dpFileName; }
+   
 
-    // Getters and setters
-
-    public File getProfileData() {
-        return profileData;
-    }
-
-    public void setProfileData(File profileData) {
-        this.profileData = profileData;
-    }
-
-    public String getProfileDataContentType() {
-        return profileDataContentType;
-    }
-
-    public void setProfileDataContentType(String profileDataContentType) {
-        this.profileDataContentType = profileDataContentType;
-    }
-
-    public String getProfileDataFileName() {
-        return profileDataFileName;
-    }
-
-    public void setProfileDataFileName(String profileDataFileName) {
-        this.profileDataFileName = profileDataFileName;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String execute() throws IOException {
-        if (profileData == null) {
-            System.out.println("Profile data file is null!");
-            return "error"; // Handle the error accordingly
-        }
-System.out.println(profileData+"   kkfgzjsjoigsnior");
-        String destinationPath = "F:\\" + profileDataFileName;
-
+    public String execute() {
         try {
-            // Copy the file
-            String savedFilePath = saveFile(profileData, destinationPath);
-
-            // Add the file path to the database
-            if (savedFilePath != null) {
-                insertIntoDatabase(savedFilePath, getUserId()); // Assuming you have a method to get the user ID
-                System.out.println("File path added to the database successfully!");
-                return "success"; // or whatever your success result is
-            } else {
-                System.out.println("Failed to add file path to the database.");
-                return "error"; // or handle the error accordingly
+        	//System.out.println(dp.getPath()+"//--");
+        	System.out.println(dpFileName+"****");
+        	String uploadPath = "C:/Users/ELCOT/eclipse-workspace/chatApplication/src/main/webapp/upload";
+        	File folder = new File(uploadPath);
+        	if (!folder.exists()) {
+        	    folder.mkdirs(); // create the directory if it doesn't exist
+        	}
+            File destFile = new File(uploadPath, dpFileName);
+            try (InputStream in = new FileInputStream(dp);
+                 OutputStream out = new FileOutputStream(destFile)) {
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, len);
+                }
             }
-        } catch (IOException | SQLException e) {
-            // Handle the exception
+            Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            String updateimageQuery="update user set profileimage=? where id=?";
+            PreparedStatement ps = conn.prepareStatement(updateimageQuery);
+            ps.setString(1, dpFileName);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+            return SUCCESS;
+        } catch (Exception e) {
             e.printStackTrace();
-            return "error"; // or handle the error accordingly
-        }
-    }
-
-    private String saveFile(File sourceFile, String destinationPath) throws IOException {
-        Path sourcePath = sourceFile.toPath();
-        Path destinationFilePath = Paths.get(destinationPath);
-        if (Files.exists(destinationFilePath)) {
-            // Handle file already exists scenario
-            System.out.println("Destination file already exists!");
-            return null; // Or handle it according to your requirement
-        }
-
-        Files.copy(sourcePath, destinationFilePath);
-        return destinationPath; // Return the saved file path
-    }
-
-
-
-    private void insertIntoDatabase(String filePath, int userId) throws SQLException {
-        String sql = "UPDATE user SET profileimage = ? WHERE id = ?";
-        
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, filePath); // Set the profile image file path
-            pstmt.setInt(2, userId); // Set the user ID
-            pstmt.executeUpdate();
+            return ERROR;
         }
     }
 }

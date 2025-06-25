@@ -48,7 +48,7 @@ public class DataBase {
 	            		user.setPassword(rs.getNString(4));
 	            		user.setImage(rs.getNString(6));
 	            		System.out.println(user.getName());
-	            		
+	            		System.out.println(user.getImage()+"//sssss///");
 	            		return user;
 	            	}
 	            	return user;
@@ -67,7 +67,7 @@ public class DataBase {
 	            return false; 
 	        }
 	    	
-	        String sql = "INSERT INTO user (name,mobileNo,username,Password) VALUES (?, ?, ?,?)";
+	        String sql = "INSERT INTO user (name,mobileNo,username,Password, profileimage) VALUES (?, ?, ?,?,?)";
 	        
 	        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 	             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -75,6 +75,7 @@ public class DataBase {
 	            stmt.setString(2, mobileNo);
 	            stmt.setString(3, username);
 	            stmt.setString(4, password);
+	            stmt.setString(5, "profile-user.png");
 	            int rowsAffected = stmt.executeUpdate();
 	            return rowsAffected > 0; 
 	        } catch (SQLException e) {
